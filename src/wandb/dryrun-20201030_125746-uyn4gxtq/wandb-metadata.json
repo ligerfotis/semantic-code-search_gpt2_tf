@@ -1,0 +1,31 @@
+{
+    "root": "/home/dev",
+    "program": "train.py",
+    "git": {
+        "remote": "https://github.com/rifatarefin/semantic-code-search.git",
+        "commit": "ae46d457ad62272df730cdc1d51492cffd731970"
+    },
+    "email": null,
+    "startedAt": "2020-10-30T12:57:47.086629",
+    "host": "liger",
+    "username": "root",
+    "executable": "/usr/local/bin/python",
+    "os": "Linux-5.4.0-52-generic-x86_64-with-Ubuntu-18.04-bionic",
+    "python": "3.6.9",
+    "gpu": "GeForce GTX 1050",
+    "gpu_count": 1,
+    "cpu_count": 8,
+    "cuda": "10.1.243",
+    "args": [
+        "--model",
+        "gpt2",
+        "--testrun"
+    ],
+    "state": "failed",
+    "jobType": null,
+    "mode": "dryrun",
+    "name": "gpt2-2020-10-30-12-57-46",
+    "project": "dev-src",
+    "heartbeatAt": "2020-10-30T12:59:03.564356",
+    "exitcode": 1
+}

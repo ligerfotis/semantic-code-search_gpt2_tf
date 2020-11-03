@@ -1,0 +1,31 @@
+{
+    "root": "/mnt/34C28480C28447D6/PycharmProjects/semantic-code-search-tf2",
+    "program": "/mnt/34C28480C28447D6/PycharmProjects/semantic-code-search-tf2/src/train.py",
+    "git": {
+        "remote": "https://github.com/rifatarefin/semantic-code-search.git",
+        "commit": "ae46d457ad62272df730cdc1d51492cffd731970"
+    },
+    "email": "ligerfotis@gmail.com",
+    "startedAt": "2020-11-03T14:43:14.257947",
+    "host": "liger",
+    "username": "liger",
+    "executable": "/mnt/34C28480C28447D6/PycharmProjects/semantic-code-search-tf2/venv/bin/python",
+    "os": "Linux-5.4.0-52-generic-x86_64-with-Ubuntu-18.04-bionic",
+    "python": "3.6.9",
+    "gpu": "GeForce GTX 1050",
+    "gpu_count": 1,
+    "cpu_count": 8,
+    "cuda": "10.1.243",
+    "args": [
+        "--model",
+        "gpt2",
+        "--testrun"
+    ],
+    "state": "killed",
+    "jobType": null,
+    "mode": "dryrun",
+    "name": "gpt2-2020-11-03-16-43-13",
+    "project": "semantic-code-search-tf2-src",
+    "heartbeatAt": "2020-11-03T14:48:10.745343",
+    "exitcode": 255
+}

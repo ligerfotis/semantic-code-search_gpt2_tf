@@ -1,0 +1,65 @@
+2020-10-30 12:38:38.178447: I tensorflow/core/platform/cpu_feature_guard.cc:142] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN)to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2020-10-30 12:38:38.201609: I tensorflow/core/platform/profile_utils/cpu_utils.cc:104] CPU Frequency: 2799925000 Hz
+2020-10-30 12:38:38.202877: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x5534d50 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2020-10-30 12:38:38.202990: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2020-10-30 12:38:38.215715: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcuda.so.1
+2020-10-30 12:38:38.302532: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:982] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-10-30 12:38:38.303076: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x54b4130 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2020-10-30 12:38:38.303098: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): GeForce GTX 1050, Compute Capability 6.1
+2020-10-30 12:38:38.303332: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:982] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-10-30 12:38:38.303606: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1716] Found device 0 with properties: 
+pciBusID: 0000:01:00.0 name: GeForce GTX 1050 computeCapability: 6.1
+coreClock: 1.493GHz coreCount: 5 deviceMemorySize: 1.95GiB deviceMemoryBandwidth: 104.43GiB/s
+2020-10-30 12:38:38.303653: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+2020-10-30 12:38:38.308168: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcublas.so.10
+2020-10-30 12:38:38.311948: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcufft.so.10
+2020-10-30 12:38:38.314093: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcurand.so.10
+2020-10-30 12:38:38.321642: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcusolver.so.10
+2020-10-30 12:38:38.325337: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcusparse.so.10
+2020-10-30 12:38:38.340229: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudnn.so.7
+2020-10-30 12:38:38.340625: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:982] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-10-30 12:38:38.341693: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:982] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-10-30 12:38:38.342380: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1858] Adding visible gpu devices: 0
+2020-10-30 12:38:38.342507: I tensorflow/stream_executor/platform/default/dso_loader.cc:48] Successfully opened dynamic library libcudart.so.10.1
+2020-10-30 12:38:38.797035: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1257] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-10-30 12:38:38.807857: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1263]      0 
+2020-10-30 12:38:38.807873: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1276] 0:   N 
+2020-10-30 12:38:38.808198: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:982] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-10-30 12:38:38.808525: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:982] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2020-10-30 12:38:38.808746: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1402] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 1245 MB memory) -> physical GPU (device: 0, name: GeForce GTX 1050, pci bus id: 0000:01:00.0, compute capability: 6.1)
+Tokenizing and building vocabulary for code snippets and queries.  This step may take several hours.
+Tensor("code_encoder/python/gpt2_encoder/tokens:0", shape=(None, 200), dtype=int32)
+Tensor("code_encoder/python/gpt2_encoder/tokens_mask:0", shape=(None, 200), dtype=float32)
+Traceback (most recent call last):
+  File "train.py", line 198, in <module>
+    run_and_debug(lambda: run(args), args['--debug'])
+  File "/usr/local/lib/python3.6/dist-packages/dpu_utils/utils/debughelper.py", line 21, in run_and_debug
+    func()
+  File "train.py", line 198, in <lambda>
+    run_and_debug(lambda: run(args), args['--debug'])
+  File "train.py", line 184, in run
+    parallelize=not(arguments['--sequential']))
+  File "train.py", line 75, in run_train
+    model.make_model(is_train=True)
+  File "/home/dev/src/models/model.py", line 231, in make_model
+    self._make_model(is_train=is_train)
+  File "/home/dev/src/models/model.py", line 260, in _make_model
+    language_encoders.append(self.__code_encoders[language].make_model(is_train=is_train))
+  File "/home/dev/src/encoders/gpt2_encoder.py", line 65, in make_model
+    attention_mask=self.placeholders['tokens_mask'])
+  File "/usr/local/lib/python3.6/dist-packages/transformers/modeling_tf_utils.py", line 697, in from_pretrained
+    model = cls(config, *model_args, **model_kwargs)
+  File "/usr/local/lib/python3.6/dist-packages/transformers/modeling_tf_gpt2.py", line 558, in __init__
+    super().__init__(config, *inputs, **kwargs)
+  File "/usr/local/lib/python3.6/dist-packages/transformers/modeling_tf_utils.py", line 340, in __init__
+    super().__init__(*inputs, **kwargs)
+  File "/usr/local/lib/python3.6/dist-packages/tensorflow/python/keras/engine/training_v1.py", line 145, in __init__
+    super(Model, self).__init__(*args, **kwargs)
+  File "/usr/local/lib/python3.6/dist-packages/tensorflow/python/training/tracking/base.py", line 457, in _method_wrapper
+    result = method(self, *args, **kwargs)
+  File "/usr/local/lib/python3.6/dist-packages/tensorflow/python/keras/engine/training.py", line 262, in __init__
+    'name', 'autocast'})
+  File "/usr/local/lib/python3.6/dist-packages/tensorflow/python/keras/utils/generic_utils.py", line 778, in validate_kwargs
+    raise TypeError(error_message, kwarg)
+TypeError: ('Keyword argument not understood:', 'input_ids')

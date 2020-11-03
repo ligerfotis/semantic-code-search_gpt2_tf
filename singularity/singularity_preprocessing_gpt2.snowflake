@@ -1,0 +1,23 @@
+Bootstrap: docker
+From: python:3.7.3
+Stage: spython-base
+
+%files
+src/docs/THIRD_PARTY_NOTICE.md .
+%post
+LANG=C.UTF-8
+LC_ALL=C.UTF-8
+
+pip --no-cache-dir install --upgrade \
+pip \
+docopt \
+pandas
+
+
+%environment
+export LANG=C.UTF-8
+export LC_ALL=C.UTF-8
+%runscript
+exec /bin/bash /home/dev/script/download_and_preprocess "$@"
+%startscript
+exec /bin/bash /home/dev/script/download_and_preprocess "$@"
