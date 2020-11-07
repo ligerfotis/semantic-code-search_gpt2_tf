@@ -1,2 +1,5 @@
 /resources/data/
 /src/wandb/
+/env/
+preprocessing.sif
+script/csnet_gpu.sif
