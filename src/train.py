@@ -62,6 +62,7 @@ def run_train(model_class: Type[Model],
     # model_class <class 'models.self_att_model.SelfAttentionModel'> | <class 'models.gpt2_model.GPT2Model'>
 
     model = model_class(hyperparameters, run_name=run_name, model_save_dir=save_folder, log_save_dir=save_folder)
+    print(model)
     # model <models.self_att_model.SelfAttentionModel object at 0x7f3c25dcbeb8>|  <models.gpt2_model.GPT2Model object at 0x7f3cc8be3eb8>
     if os.path.exists(model.model_save_path):
         model = model_restore_helper.restore(RichPath.create(model.model_save_path), is_train=True)

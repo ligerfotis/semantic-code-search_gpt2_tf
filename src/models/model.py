@@ -258,7 +258,7 @@ class Model(ABC):
                                                                               hyperparameters=self.hyperparameters,
                                                                               metadata=language_metadata)
                     language_encoders.append(self.__code_encoders[language].make_model(is_train=is_train))
-            print(language_encoders)
+            #print(language_encoders)
             self.ops['code_representations'] = tf.concat(language_encoders, axis=0)
         with tf.compat.v1.variable_scope("query_encoder"):
             self.__query_encoder = self.__query_encoder_type(label="query",
@@ -723,7 +723,7 @@ class Model(ABC):
             ops_to_run = {'loss': self.__ops['loss'], 'mrr': self.__ops['mrr']}
             if is_train:
                 ops_to_run['train_step'] = self.__ops['train_step']
-            print(ops_to_run)
+            #print(ops_to_run)
             op_results = self.__sess.run(ops_to_run, feed_dict=batch_data_dict)
             assert not np.isnan(op_results['loss'])
 
@@ -950,3 +950,4 @@ class Model(ABC):
                                                       data_loader_fn=code_data_loader,
                                                       model_representation_op=self.__ops['code_representations'],
                                                       representation_type=RepresentationType.CODE)
+

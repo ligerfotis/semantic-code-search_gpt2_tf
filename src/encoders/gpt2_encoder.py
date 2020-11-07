@@ -1,3 +1,4 @@
+import os
 from typing import Dict, Any
 import tensorflow as tf
 from transformers import GPT2Tokenizer, TFGPT2Model, GPT2Config, TrainingArguments, Trainer, TFGPT2LMHeadModel
@@ -57,8 +58,8 @@ class GPT2Encoder(MaskedSeqEncoder):
 
             # print(self.placeholders['tokens'])
             # print(self.placeholders['tokens_mask'])
-
-            model = TFGPT2Model.from_pretrained('gpt2', config=config)
+            cache_dir = "../resources/hugging_face/gpt2/"
+            model = TFGPT2Model.from_pretrained('gpt2', cache_dir=cache_dir, config=config)
 
             # outputs = model(input_ids=self.placeholders['tokens'],
             #                 attention_mask=self.placeholders['tokens_mask'])
@@ -112,3 +113,4 @@ class GPT2Encoder(MaskedSeqEncoder):
     #     )
     #     trainer.train()
     #     trainer.save_model()
+
