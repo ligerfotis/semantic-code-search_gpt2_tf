@@ -3,3 +3,9 @@
 /env/
 preprocessing.sif
 script/csnet_gpu.sif
+script/.cache/
+script/.config/
+cript/.keras/
+cript/.local/
+cript/.netrc
+
