@@ -1,8 +1,7 @@
 import os
 from typing import Dict, Any
+from transformers import GPT2Tokenizer, TFGPT2Model, GPT2Config
 import tensorflow as tf
-from transformers import GPT2Tokenizer, TFGPT2Model, GPT2Config, TrainingArguments, Trainer, TFGPT2LMHeadModel
-
 # from .utils.bert_self_attention import BertConfig, BertModel
 from .masked_seq_encoder import MaskedSeqEncoder
 from utils.tfutils import pool_sequence_embedding
@@ -13,22 +12,10 @@ from utils.tfutils import pool_sequence_embedding
 class GPT2Encoder(MaskedSeqEncoder):
     @classmethod
     def get_default_hyperparameters(cls) -> Dict[str, Any]:
-        config = GPT2Config()
 
-        encoder_hypers = {'self_attention_activation': config.activation_function,
-                          'self_attention_hidden_size': config.hidden_size,
-                          'self_attention_intermediate_size': config.hidden_size,
-                          'self_attention_num_layers': config.n_layer,
-                          'self_attention_num_heads': config.n_head,
-                          'self_attention_pool_mode': 'weighted_mean',
-                          'token_vocab_size': config.vocab_size,
-                          'token_vocab_count_threshold': config.n_positions,
-                          'token_embedding_size': config.hidden_size,
-
+        encoder_hypers = {'self_attention_pool_mode': 'weighted_mean',
                           'use_subtokens': False,
                           'mark_subtoken_end': False,
-
-                          'max_num_tokens': config.n_positions,
 
                           'use_bpe': True,
                           'pct_bpe': 0.5
@@ -44,38 +31,38 @@ class GPT2Encoder(MaskedSeqEncoder):
     def output_representation_size(self):
         return self.get_hyper('self_attention_hidden_size')
 
-    def make_model(self, is_train: bool = False):
-        with tf.compat.v1.variable_scope("gpt2_encoder"):
-            self._make_placeholders()
-            """
-            GPT-2 uses Transformer's decoder as a building block, excluding the encoder-decoder attention module.
-            Thus, the only difference with Bert's building blocks(Transformer's encoder) is the masked attention.
-            However, in this implementation the masked attention is used for the BertEncoder.
-            Therefore the BertModel will be used and adjust the hyper-parameters to be the same of those of the
-            pretrained GPT-2 models.
-            """
-            config = GPT2Config()
+    def make_model(self, is_train: bool = False, name="default"):
+        # with tf.compat.v1.variable_scope("gpt2_encoder_" + name):
+        self._make_placeholders()
+        """
+        GPT-2 uses Transformer's decoder as a building block, excluding the encoder-decoder attention module.
+        Thus, the only difference with Bert's building blocks(Transformer's encoder) is the masked attention.
+        However, in this implementation the masked attention is used for the BertEncoder.
+        Therefore the BertModel will be used and adjust the hyper-parameters to be the same of those of the
+        pretrained GPT-2 models.
+        """
+        # print(self.placeholders['tokens'])
+        # print(self.placeholders['tokens_mask'])
+        cache_dir = "../resources/hugging_face/gpt2/"
+        model = TFGPT2Model.from_pretrained('gpt2', cache_dir=cache_dir, return_dict=True)
+        # tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+        # model = TFGPT2Model.from_pretrained('gpt2', return_dict=True)
+        # model = tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+        # model = TFGPT2Model.from_pretrained('gpt2', return_dict=True)
+        # outputs = model(input_ids=self.placeholders['tokens'],
+        #                 attention_mask=self.placeholders['tokens_mask'])
+        output = model(self.placeholders['tokens'], training=True)
 
-            # print(self.placeholders['tokens'])
-            # print(self.placeholders['tokens_mask'])
-            cache_dir = "../resources/hugging_face/gpt2/"
-            model = TFGPT2Model.from_pretrained('gpt2', cache_dir=cache_dir, config=config)
+        # tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
 
-            # outputs = model(input_ids=self.placeholders['tokens'],
-            #                 attention_mask=self.placeholders['tokens_mask'])
-            output = model.call(self.placeholders['tokens'])
+        seq_token_embeddings = output.last_hidden_state
 
-            # tokenizer = GPT2Tokenizer.from_pretrained('bert-base-uncased')
-
-            seq_token_embeddings = output[0]
-            # Tensor("query_encoder/self_attention_encoder/bert/encoder/Reshape_4:0", shape=(?, 30, 128), dtype=float32)
-            seq_token_masks = self.placeholders['tokens_mask']
-            # Tensor("query_encoder/self_attention_encoder/tokens_mask:0", shape=(?, 30), dtype=float32)
-            seq_token_lengths = tf.reduce_sum(input_tensor=seq_token_masks, axis=1)  # B
-            return pool_sequence_embedding("weighted_mean",
-                                           sequence_token_embeddings=seq_token_embeddings,
-                                           sequence_lengths=seq_token_lengths,
-                                           sequence_token_masks=seq_token_masks)
+        seq_token_masks = self.placeholders['tokens_mask']
+        seq_token_lengths = tf.reduce_sum(input_tensor=seq_token_masks, axis=1)  # B
+        return pool_sequence_embedding("weighted_mean",
+                                       sequence_token_embeddings=seq_token_embeddings,
+                                       sequence_lengths=seq_token_lengths,
+                                       sequence_token_masks=seq_token_masks)
 
     # def loss(self):
     #     loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)

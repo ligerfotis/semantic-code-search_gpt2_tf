@@ -106,8 +106,8 @@ class Model(ABC):
                 'query_random_token_frequency': 0.,
 
                 # Maximal number of tokens considered to compute a representation for code/query:
-                'code_max_num_tokens': 200,
-                'query_max_num_tokens': 30,
+                'code_max_num_tokens': 1024,
+                'query_max_num_tokens': 1024,
                }
 
     def __init__(self,
@@ -250,21 +250,22 @@ class Model(ABC):
                                         shape=[self.hyperparameters['batch_size']],
                                         name='sample_loss_weights')
 
-        with tf.compat.v1.variable_scope("code_encoder"):
-            language_encoders = []
-            for (language, language_metadata) in sorted(self.__per_code_language_metadata.items(), key=lambda kv: kv[0]):
-                with tf.compat.v1.variable_scope(language):
-                    self.__code_encoders[language] = self.__code_encoder_type(label="code",
-                                                                              hyperparameters=self.hyperparameters,
-                                                                              metadata=language_metadata)
-                    language_encoders.append(self.__code_encoders[language].make_model(is_train=is_train))
-            #print(language_encoders)
-            self.ops['code_representations'] = tf.concat(language_encoders, axis=0)
-        with tf.compat.v1.variable_scope("query_encoder"):
-            self.__query_encoder = self.__query_encoder_type(label="query",
-                                                             hyperparameters=self.hyperparameters,
-                                                             metadata=self.__query_metadata)
-            self.ops['query_representations'] = self.__query_encoder.make_model(is_train=is_train)
+        # with tf.compat.v1.variable_scope("code_encoder"):
+        language_encoders = []
+        for (language, language_metadata) in sorted(self.__per_code_language_metadata.items(), key=lambda kv: kv[0]):
+            # with tf.compat.v1.variable_scope(language):
+            self.__code_encoders[language] = self.__code_encoder_type(label="code",
+                                                                      hyperparameters=self.hyperparameters,
+                                                                      metadata=language_metadata)
+            language_encoders.append(self.__code_encoders[language].make_model(is_train=is_train,
+                                                                               name="code_"+language))
+        #print(language_encoders)
+        self.ops['code_representations'] = tf.concat(language_encoders, axis=0)
+        # with tf.compat.v1.variable_scope("query_encoder"):
+        self.__query_encoder = self.__query_encoder_type(label="query",
+                                                         hyperparameters=self.hyperparameters,
+                                                         metadata=self.__query_metadata)
+        self.ops['query_representations'] = self.__query_encoder.make_model(is_train=is_train, name="query")
 
         code_representation_size = next(iter(self.__code_encoders.values())).output_representation_size
         query_representation_size = self.__query_encoder.output_representation_size

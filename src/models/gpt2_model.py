@@ -1,8 +1,6 @@
 import os
 from typing import Any, Dict, Optional, List, Tuple
-import tensorflow as tf
 from encoders import GPT2Encoder
-from transformers import GPT2Config
 
 from .model import Model
 from dpu_utils.utils import RichPath
