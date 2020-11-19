@@ -1,18 +1,18 @@
-2020-11-19 20:42:45,981 DEBUG   MainThread:4422 [wandb_config.py:_load_defaults():87] no defaults not found in config-defaults.yaml
-2020-11-19 20:42:46,004 DEBUG   MainThread:4422 [cmd.py:execute():719] Popen(['git', 'rev-parse', '--show-toplevel'], cwd=/mnt/34C28480C28447D6/PycharmProjects/CSE_6324/semantic-code-search_gpt2_tf, universal_newlines=False, shell=None, istream=None)
-2020-11-19 20:42:46,026 DEBUG   MainThread:4422 [cmd.py:execute():719] Popen(['git', 'cat-file', '--batch-check'], cwd=/mnt/34C28480C28447D6/PycharmProjects/CSE_6324/semantic-code-search_gpt2_tf, universal_newlines=False, shell=None, istream=<valid stream>)
-2020-11-19 20:42:46,035 DEBUG   MainThread:4422 [cmd.py:execute():719] Popen(['git', 'rev-parse', '--show-toplevel'], cwd=/mnt/34C28480C28447D6/PycharmProjects/CSE_6324/semantic-code-search_gpt2_tf, universal_newlines=False, shell=None, istream=None)
-2020-11-19 20:42:46,041 DEBUG   MainThread:4422 [cmd.py:execute():719] Popen(['git', 'status', '--porcelain', '--untracked-files'], cwd=/mnt/34C28480C28447D6/PycharmProjects/CSE_6324/semantic-code-search_gpt2_tf, universal_newlines=False, shell=None, istream=None)
-2020-11-19 20:42:46,087 DEBUG   MainThread:4422 [run_manager.py:__init__():526] Initialized sync for semantic-code-search_gpt2_tf-src/1lytxxrd
-2020-11-19 20:42:46,093 INFO    MainThread:4422 [run_manager.py:wrap_existing_process():1093] wrapping existing process 4394
-2020-11-19 20:42:46,103 DEBUG   MainThread:4422 [connectionpool.py:_new_conn():943] Starting new HTTPS connection (1): pypi.org:443
-2020-11-19 20:42:46,469 DEBUG   MainThread:4422 [connectionpool.py:_make_request():442] https://pypi.org:443 "GET /pypi/wandb/json HTTP/1.1" 200 51947
-2020-11-19 20:42:46,569 INFO    MainThread:4422 [run_manager.py:init_run():904] system metrics and metadata threads started
-2020-11-19 20:42:46,571 INFO    MainThread:4422 [run_manager.py:wrap_existing_process():1110] informing user process we are ready to proceed
-2020-11-19 20:42:46,574 INFO    MainThread:4422 [run_manager.py:_sync_etc():1214] entering loop for messages from user process
-2020-11-19 20:42:47,020 INFO    Thread-8  :4422 [run_manager.py:_on_file_modified():673] file/dir modified: /mnt/34C28480C28447D6/PycharmProjects/CSE_6324/semantic-code-search_gpt2_tf/src/wandb/dryrun-20201119_184244-1lytxxrd/config.yaml
-2020-11-19 21:45:48,775 INFO    MainThread:4422 [run_manager.py:_sync_etc():1270] process received interrupt signal, shutting down
-2020-11-19 21:45:48,798 INFO    MainThread:4422 [run_manager.py:_sync_etc():1323] closing log streams and sending exitcode to W&B
-2020-11-19 21:45:48,923 INFO    MainThread:4422 [run_manager.py:shutdown():1020] shutting down system stats and metadata service
-0-11-19 21:45:48,798 INFO    MainThread:4422 [1lytxxrd:run_manager.py:_sync_etc():1323] closing log streams and sending exitcode to W&B
-2020-11-19 21:45:48,923 INFO    MainThread:4422 [1lytxxrd:run_manager.py:shutdown():1020] shutting down system stats and metadata service
+2020-11-19 23:17:14,690 DEBUG   MainThread:12952 [wandb_config.py:_load_defaults():87] no defaults not found in config-defaults.yaml
+2020-11-19 23:17:14,696 DEBUG   MainThread:12952 [cmd.py:execute():719] Popen(['git', 'rev-parse', '--show-toplevel'], cwd=/mnt/34C28480C28447D6/PycharmProjects/CSE_6324/semantic-code-search_gpt2_tf, universal_newlines=False, shell=None, istream=None)
+2020-11-19 23:17:14,726 DEBUG   MainThread:12952 [cmd.py:execute():719] Popen(['git', 'cat-file', '--batch-check'], cwd=/mnt/34C28480C28447D6/PycharmProjects/CSE_6324/semantic-code-search_gpt2_tf, universal_newlines=False, shell=None, istream=<valid stream>)
+2020-11-19 23:17:14,735 DEBUG   MainThread:12952 [cmd.py:execute():719] Popen(['git', 'rev-parse', '--show-toplevel'], cwd=/mnt/34C28480C28447D6/PycharmProjects/CSE_6324/semantic-code-search_gpt2_tf, universal_newlines=False, shell=None, istream=None)
+2020-11-19 23:17:14,741 DEBUG   MainThread:12952 [cmd.py:execute():719] Popen(['git', 'status', '--porcelain', '--untracked-files'], cwd=/mnt/34C28480C28447D6/PycharmProjects/CSE_6324/semantic-code-search_gpt2_tf, universal_newlines=False, shell=None, istream=None)
+2020-11-19 23:17:14,796 DEBUG   MainThread:12952 [run_manager.py:__init__():526] Initialized sync for semantic-code-search_gpt2_tf-src/xaf4fht9
+2020-11-19 23:17:14,877 INFO    MainThread:12952 [run_manager.py:wrap_existing_process():1093] wrapping existing process 12845
+2020-11-19 23:17:14,903 DEBUG   MainThread:12952 [connectionpool.py:_new_conn():943] Starting new HTTPS connection (1): pypi.org:443
+2020-11-19 23:17:15,267 DEBUG   MainThread:12952 [connectionpool.py:_make_request():442] https://pypi.org:443 "GET /pypi/wandb/json HTTP/1.1" 200 51947
+2020-11-19 23:17:15,374 INFO    MainThread:12952 [run_manager.py:init_run():904] system metrics and metadata threads started
+2020-11-19 23:17:15,376 INFO    MainThread:12952 [run_manager.py:wrap_existing_process():1110] informing user process we are ready to proceed
+2020-11-19 23:17:15,378 INFO    MainThread:12952 [run_manager.py:_sync_etc():1214] entering loop for messages from user process
+2020-11-19 23:17:15,726 INFO    Thread-8  :12952 [run_manager.py:_on_file_modified():673] file/dir modified: /mnt/34C28480C28447D6/PycharmProjects/CSE_6324/semantic-code-search_gpt2_tf/src/wandb/dryrun-20201119_211713-xaf4fht9/config.yaml
+2020-11-19 23:19:47,545 INFO    MainThread:12952 [run_manager.py:_sync_etc():1270] process received interrupt signal, shutting down
+2020-11-19 23:19:47,546 INFO    MainThread:12952 [run_manager.py:_sync_etc():1323] closing log streams and sending exitcode to W&B
+2020-11-19 23:19:47,549 INFO    MainThread:12952 [run_manager.py:shutdown():1020] shutting down system stats and metadata service
+-11-19 23:19:47,546 INFO    MainThread:12952 [xaf4fht9:run_manager.py:_sync_etc():1323] closing log streams and sending exitcode to W&B
+2020-11-19 23:19:47,549 INFO    MainThread:12952 [xaf4fht9:run_manager.py:shutdown():1020] shutting down system stats and metadata service
