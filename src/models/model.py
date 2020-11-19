@@ -16,7 +16,6 @@ from dpu_utils.utils import RichPath
 from utils.py_utils import run_jobs_in_parallel
 from encoders import Encoder, QueryType
 
-
 LoadedSamples = Dict[str, List[Dict[str, Any]]]
 SampleId = Tuple[str, int]
 
@@ -81,34 +80,34 @@ class Model(ABC):
     @abstractmethod
     def get_default_hyperparameters(cls) -> Dict[str, Any]:
         return {
-                'batch_size': 200,
+            'batch_size': 200,
 
-                'optimizer': 'Adam',
-                'seed': 0,
-                'dropout_keep_rate': 0.9,
-                'learning_rate': 0.01,
-                'learning_rate_code_scale_factor': 1.,
-                'learning_rate_query_scale_factor': 1.,
-                'learning_rate_decay': 0.98,
-                'momentum': 0.85,
-                'gradient_clip': 1,
-                'loss': 'softmax',  # One of softmax, cosine, max-margin
-                'margin': 1,
-                'max_epochs': 500,
-                'patience': 5,
+            'optimizer': 'Adam',
+            'seed': 0,
+            'dropout_keep_rate': 0.9,
+            'learning_rate': 0.01,
+            'learning_rate_code_scale_factor': 1.,
+            'learning_rate_query_scale_factor': 1.,
+            'learning_rate_decay': 0.98,
+            'momentum': 0.85,
+            'gradient_clip': 1,
+            'loss': 'softmax',  # One of softmax, cosine, max-margin
+            'margin': 1,
+            'max_epochs': 500,
+            'patience': 5,
 
-                # Fraction of samples for which the query should be the function name instead of the docstring:
-                'fraction_using_func_name': 0.1,
-                # Only functions with a name at least this long will be candidates for training with the function name
-                # as the query instead of the docstring:
-                'min_len_func_name_for_query': 12,
-                # Frequency at which random, common tokens are added into the query:
-                'query_random_token_frequency': 0.,
+            # Fraction of samples for which the query should be the function name instead of the docstring:
+            'fraction_using_func_name': 0.1,
+            # Only functions with a name at least this long will be candidates for training with the function name
+            # as the query instead of the docstring:
+            'min_len_func_name_for_query': 12,
+            # Frequency at which random, common tokens are added into the query:
+            'query_random_token_frequency': 0.,
 
-                # Maximal number of tokens considered to compute a representation for code/query:
-                'code_max_num_tokens': 1024,
-                'query_max_num_tokens': 1024,
-               }
+            # Maximal number of tokens considered to compute a representation for code/query:
+            'code_max_num_tokens': 1024,
+            'query_max_num_tokens': 1024,
+        }
 
     def __init__(self,
                  hyperparameters: Dict[str, Any],
@@ -118,7 +117,8 @@ class Model(ABC):
                  model_save_dir: Optional[str] = None,
                  log_save_dir: Optional[str] = None) -> None:
         self.__code_encoder_type = code_encoder_type
-        self.__code_encoders: OrderedDict[str, Any] = OrderedDict()  # OrderedDict as we are using the order of languages a few times...
+        self.__code_encoders: OrderedDict[
+            str, Any] = OrderedDict()  # OrderedDict as we are using the order of languages a few times...
 
         self.__query_encoder_type = query_encoder_type
         self.__query_encoder: Any = None
@@ -184,10 +184,10 @@ class Model(ABC):
     def representation_size(self) -> int:
         return self.__query_encoder.output_representation_size
 
-    def _log_tensorboard_scalar(self, tag:str, value:float, step:int) -> None:
+    def _log_tensorboard_scalar(self, tag: str, value: float, step: int) -> None:
         """Log scalar values that are not ops to tensorboard."""
         summary = tf.compat.v1.Summary(value=[tf.compat.v1.Summary.Value(tag=tag,
-                                                     simple_value=value)])
+                                                                         simple_value=value)])
         self.__summary_writer.add_summary(summary, step)
         self.__summary_writer.flush()
 
@@ -198,13 +198,13 @@ class Model(ABC):
                            for (var, value) in zip(variables_to_save, weights_to_save)}
 
         data_to_save = {
-                         "model_type": type(self).__name__,
-                         "hyperparameters": self.hyperparameters,
-                         "query_metadata": self.__query_metadata,
-                         "per_code_language_metadata": self.__per_code_language_metadata,
-                         "weights": weights_to_save,
-                         "run_name": self.__run_name,
-                       }
+            "model_type": type(self).__name__,
+            "hyperparameters": self.hyperparameters,
+            "query_metadata": self.__query_metadata,
+            "per_code_language_metadata": self.__per_code_language_metadata,
+            "weights": weights_to_save,
+            "run_name": self.__run_name,
+        }
 
         path.save_as_compressed_file(data_to_save)
 
@@ -242,13 +242,13 @@ class Model(ABC):
         tensors of the same shape and rank 2.
         """
         self.__placeholders['dropout_keep_rate'] = tf.compat.v1.placeholder(tf.float32,
-                                                                  shape=(),
-                                                                  name='dropout_keep_rate')
+                                                                            shape=(),
+                                                                            name='dropout_keep_rate')
         self.__placeholders['sample_loss_weights'] = \
             tf.compat.v1.placeholder_with_default(input=np.ones(shape=[self.hyperparameters['batch_size']],
-                                                      dtype=np.float32),
-                                        shape=[self.hyperparameters['batch_size']],
-                                        name='sample_loss_weights')
+                                                                dtype=np.float32),
+                                                  shape=[self.hyperparameters['batch_size']],
+                                                  name='sample_loss_weights')
 
         # with tf.compat.v1.variable_scope("code_encoder"):
         language_encoders = []
@@ -260,7 +260,7 @@ class Model(ABC):
                 language_encoders.append(self.__code_encoders[language].make_model(is_train=is_train,
                                                                                    name=language))
 
-        #print(language_encoders)
+        # print(language_encoders)
         self.ops['code_representations'] = tf.concat(language_encoders, axis=0)
         # with tf.compat.v1.variable_scope("query_encoder"):
         self.__query_encoder = self.__query_encoder_type(label="query",
@@ -310,11 +310,12 @@ class Model(ABC):
             similarity_scores = cosine_similarities
 
             # A max-margin-like loss, but do not penalize negative cosine similarities.
-            neg_matrix = tf.linalg.tensor_diag(tf.fill(dims=[tf.shape(input=cosine_similarities)[0]], value=float('-inf')))
+            neg_matrix = tf.linalg.tensor_diag(
+                tf.fill(dims=[tf.shape(input=cosine_similarities)[0]], value=float('-inf')))
             per_sample_loss = tf.maximum(0., self.hyperparameters['margin']
-                                             - tf.linalg.tensor_diag_part(cosine_similarities)
-                                             + tf.reduce_max(input_tensor=tf.nn.relu(cosine_similarities + neg_matrix),
-                                                             axis=-1))
+                                         - tf.linalg.tensor_diag_part(cosine_similarities)
+                                         + tf.reduce_max(input_tensor=tf.nn.relu(cosine_similarities + neg_matrix),
+                                                         axis=-1))
         elif self.hyperparameters['loss'] == 'max-margin':
             logits = tf.matmul(self.ops['query_representations'],
                                self.ops['code_representations'],
@@ -327,14 +328,17 @@ class Model(ABC):
 
             min_inf_matrix = tf.linalg.tensor_diag(tf.fill(dims=[tf.shape(input=logprobs)[0]], value=float('-inf')))
             per_sample_loss = tf.maximum(0., self.hyperparameters['margin']
-                                             - tf.linalg.tensor_diag_part(logprobs)
-                                             + tf.reduce_max(input_tensor=logprobs + min_inf_matrix, axis=-1))
+                                         - tf.linalg.tensor_diag_part(logprobs)
+                                         + tf.reduce_max(input_tensor=logprobs + min_inf_matrix, axis=-1))
         elif self.hyperparameters['loss'] == 'triplet':
             query_reps = self.ops['query_representations']  # BxD
-            code_reps = self.ops['code_representations']    # BxD
+            code_reps = self.ops['code_representations']  # BxD
 
-            query_reps = tf.broadcast_to(query_reps, shape=[tf.shape(input=query_reps)[0], tf.shape(input=query_reps)[0],tf.shape(input=query_reps)[1]])  # B*xBxD
-            code_reps = tf.broadcast_to(code_reps, shape=[tf.shape(input=code_reps)[0], tf.shape(input=code_reps)[0],tf.shape(input=code_reps)[1]])  # B*xBxD
+            query_reps = tf.broadcast_to(query_reps,
+                                         shape=[tf.shape(input=query_reps)[0], tf.shape(input=query_reps)[0],
+                                                tf.shape(input=query_reps)[1]])  # B*xBxD
+            code_reps = tf.broadcast_to(code_reps, shape=[tf.shape(input=code_reps)[0], tf.shape(input=code_reps)[0],
+                                                          tf.shape(input=code_reps)[1]])  # B*xBxD
             code_reps = tf.transpose(a=code_reps, perm=(1, 0, 2))  # BxB*xD
 
             all_pair_distances = tf.norm(tensor=query_reps - code_reps, axis=-1)  # BxB
@@ -342,15 +346,18 @@ class Model(ABC):
 
             correct_distances = tf.expand_dims(tf.linalg.tensor_diag_part(all_pair_distances), axis=-1)  # Bx1
 
-            pointwise_loss = tf.nn.relu(correct_distances - all_pair_distances + self.hyperparameters['margin']) # BxB
+            pointwise_loss = tf.nn.relu(correct_distances - all_pair_distances + self.hyperparameters['margin'])  # BxB
             pointwise_loss *= (1 - tf.eye(tf.shape(input=pointwise_loss)[0]))
 
-            per_sample_loss = tf.reduce_sum(input_tensor=pointwise_loss, axis=-1) / (tf.reduce_sum(input_tensor=tf.cast(tf.greater(pointwise_loss, 0), dtype=tf.float32), axis=-1) + 1e-10)  # B
+            per_sample_loss = tf.reduce_sum(input_tensor=pointwise_loss, axis=-1) / (
+                        tf.reduce_sum(input_tensor=tf.cast(tf.greater(pointwise_loss, 0), dtype=tf.float32),
+                                      axis=-1) + 1e-10)  # B
         else:
             raise Exception(f'Unrecognized loss-type "{self.hyperparameters["loss"]}"')
 
         per_sample_loss = per_sample_loss * self.placeholders['sample_loss_weights']
-        self.ops['loss'] = tf.reduce_sum(input_tensor=per_sample_loss) / tf.reduce_sum(input_tensor=self.placeholders['sample_loss_weights'])
+        self.ops['loss'] = tf.reduce_sum(input_tensor=per_sample_loss) / tf.reduce_sum(
+            input_tensor=self.placeholders['sample_loss_weights'])
 
         # extract the logits from the diagonal of the matrix, which are the logits corresponding to the ground-truth
         correct_scores = tf.linalg.tensor_diag_part(similarity_scores)
@@ -369,8 +376,8 @@ class Model(ABC):
             optimizer = tf.compat.v1.train.GradientDescentOptimizer(learning_rate=self.hyperparameters['learning_rate'])
         elif optimizer_name == 'rmsprop':
             optimizer = tf.compat.v1.train.RMSPropOptimizer(learning_rate=self.hyperparameters['learning_rate'],
-                                                  decay=self.hyperparameters['learning_rate_decay'],
-                                                  momentum=self.hyperparameters['momentum'])
+                                                            decay=self.hyperparameters['learning_rate_decay'],
+                                                            momentum=self.hyperparameters['momentum'])
         elif optimizer_name == 'adam':
             optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=self.hyperparameters['learning_rate'])
         else:
@@ -394,13 +401,15 @@ class Model(ABC):
             pruned_clipped_gradients.append((gradient, trainable_var))
         self.ops['train_step'] = optimizer.apply_gradients(pruned_clipped_gradients)
 
-    def load_metadata(self, data_dirs: List[RichPath], max_files_per_dir: Optional[int] = None, parallelize: bool = True) -> None:
+    def load_metadata(self, data_dirs: List[RichPath], max_files_per_dir: Optional[int] = None,
+                      parallelize: bool = True) -> None:
         raw_query_metadata_list = []
         raw_code_language_metadata_lists: DefaultDict[str, List] = defaultdict(list)
 
         def metadata_parser_fn(_, file_path: RichPath) -> Iterable[Tuple[Dict[str, Any], Dict[str, Dict[str, Any]]]]:
             raw_query_metadata = self.__query_encoder_type.init_metadata()
-            per_code_language_metadata: DefaultDict[str, Dict[str, Any]] = defaultdict(self.__code_encoder_type.init_metadata)
+            per_code_language_metadata: DefaultDict[str, Dict[str, Any]] = defaultdict(
+                self.__code_encoder_type.init_metadata)
 
             for raw_sample in file_path.read_by_file_suffix():
                 sample_language = raw_sample['language']
@@ -431,7 +440,8 @@ class Model(ABC):
                 for res in metadata_parser_fn(idx, file):
                     received_result_callback(res)
 
-        self.__query_metadata = self.__query_encoder_type.finalise_metadata("query", self.hyperparameters, raw_query_metadata_list)
+        self.__query_metadata = self.__query_encoder_type.finalise_metadata("query", self.hyperparameters,
+                                                                            raw_query_metadata_list)
         for (language, raw_per_language_metadata) in raw_code_language_metadata_lists.items():
             self.__per_code_language_metadata[language] = \
                 self.__code_encoder_type.finalise_metadata("code", self.hyperparameters, raw_per_language_metadata)
@@ -453,7 +463,7 @@ class Model(ABC):
 
     def load_data_from_dirs(self, data_dirs: List[RichPath], is_test: bool,
                             max_files_per_dir: Optional[int] = None,
-                            return_num_original_samples: bool = False, 
+                            return_num_original_samples: bool = False,
                             parallelize: bool = True) -> Union[LoadedSamples, Tuple[LoadedSamples, int]]:
         return self.load_data_from_files(data_files=list(get_data_files_from_directory(data_dirs, max_files_per_dir)),
                                          is_test=is_test,
@@ -461,7 +471,8 @@ class Model(ABC):
                                          parallelize=parallelize)
 
     def load_data_from_files(self, data_files: Iterable[RichPath], is_test: bool,
-                             return_num_original_samples: bool = False, parallelize: bool = True) -> Union[LoadedSamples, Tuple[LoadedSamples, int]]:
+                             return_num_original_samples: bool = False, parallelize: bool = True) -> Union[
+        LoadedSamples, Tuple[LoadedSamples, int]]:
         tasks_as_args = [(self.hyperparameters,
                           self.__code_encoder_type,
                           self.__per_code_language_metadata,
@@ -572,14 +583,17 @@ class Model(ABC):
             A pair of a map from model placeholders to appropriate data structures and a list of sample ids
             such that id_list[i] = id means that the i-th minibatch entry corresponds to the sample identified by id.
         """
-        final_minibatch = {self.__placeholders['dropout_keep_rate']: self.hyperparameters['dropout_keep_rate'] if is_train else 1.0}
+        final_minibatch = {
+            self.__placeholders['dropout_keep_rate']: self.hyperparameters['dropout_keep_rate'] if is_train else 1.0}
 
         # Finalise the code representations while joining the query information:
         full_query_batch_data: Dict[str, Any] = {'code_sample_ids': []}
         language_weights = []
         for (language, language_encoder) in self.__code_encoders.items():
-            language_encoder.minibatch_to_feed_dict(batch_data['per_language_code_data'][language], final_minibatch, is_train)
-            full_query_batch_data['code_sample_ids'].extend(batch_data['per_language_code_data'][language]['code_sample_ids'])
+            language_encoder.minibatch_to_feed_dict(batch_data['per_language_code_data'][language], final_minibatch,
+                                                    is_train)
+            full_query_batch_data['code_sample_ids'].extend(
+                batch_data['per_language_code_data'][language]['code_sample_ids'])
 
             for (key, value) in batch_data['per_language_query_data'][language].items():
                 if key in full_query_batch_data:
@@ -592,12 +606,14 @@ class Model(ABC):
                 else:
                     full_query_batch_data[key] = value
             if language_to_reweighting_factor is not None:
-                language_weights.extend([language_to_reweighting_factor[language]] * len(batch_data['per_language_code_data'][language]['tokens']))
+                language_weights.extend([language_to_reweighting_factor[language]] * len(
+                    batch_data['per_language_code_data'][language]['tokens']))
 
         self.__query_encoder.minibatch_to_feed_dict(full_query_batch_data, final_minibatch, is_train)
         if language_to_reweighting_factor is not None:
             final_minibatch[self.__placeholders['sample_loss_weights']] = language_weights
-        if len(full_query_batch_data['query_sample_ids']) > 0:  # If we are only computing code representations, this will be empty
+        if len(full_query_batch_data[
+                   'query_sample_ids']) > 0:  # If we are only computing code representations, this will be empty
             return final_minibatch, full_query_batch_data['query_sample_ids']
         else:
             return final_minibatch, full_query_batch_data['code_sample_ids']
@@ -652,8 +668,9 @@ class Model(ABC):
             #  =                             total_num_samples / num_languages
             total_num_samples = sum(language_to_num_remaining_samples.values())
             num_languages = len(language_to_num_remaining_samples)
-            language_to_reweighting_factor = {language: float(total_num_samples)/(num_languages * num_samples_per_language)
-                                              for (language, num_samples_per_language) in language_to_num_remaining_samples.items()}
+            language_to_reweighting_factor = {
+                language: float(total_num_samples) / (num_languages * num_samples_per_language)
+                for (language, num_samples_per_language) in language_to_num_remaining_samples.items()}
         else:
             language_to_reweighting_factor = None  # type: ignore
 
@@ -665,14 +682,16 @@ class Model(ABC):
             remaining_languages = list(language_to_num_remaining_samples.keys())
             total_num_remaining_samples = sum(language_to_num_remaining_samples.values())
             picked_language = np.random.choice(a=remaining_languages,
-                                               p=[float(language_to_num_remaining_samples[lang]) / total_num_remaining_samples
+                                               p=[float(language_to_num_remaining_samples[
+                                                            lang]) / total_num_remaining_samples
                                                   for lang in remaining_languages])
 
             # Pick an example for the given language, and update counters:
-            picked_example_idx = language_to_num_remaining_samples[picked_language] - 1  # Note that indexing is 0-based and counting 1-based...
+            picked_example_idx = language_to_num_remaining_samples[
+                                     picked_language] - 1  # Note that indexing is 0-based and counting 1-based...
             language_to_num_remaining_samples[picked_language] -= 1
             if language_to_num_remaining_samples[picked_language] == 0:
-                del(language_to_num_remaining_samples[picked_language])  # We are done with picked_language now
+                del (language_to_num_remaining_samples[picked_language])  # We are done with picked_language now
             picked_sample = data[picked_language][language_to_idx_list[picked_language][picked_example_idx]]
 
             # Add the example to the current minibatch under preparation:
@@ -680,7 +699,9 @@ class Model(ABC):
             batch_finished = self.__extend_minibatch_by_sample(batch_data,
                                                                picked_sample,
                                                                language=picked_language,
-                                                               sample_id=(picked_language, language_to_idx_list[picked_language][picked_example_idx]),
+                                                               sample_id=(picked_language,
+                                                                          language_to_idx_list[picked_language][
+                                                                              picked_example_idx]),
                                                                include_query=include_query,
                                                                include_code=include_code,
                                                                is_train=is_train
@@ -688,15 +709,18 @@ class Model(ABC):
             total_samples_used += 1
 
             if batch_finished:
-                feed_dict, original_sample_ids = self.__minibatch_to_feed_dict(batch_data, language_to_reweighting_factor, is_train)
+                feed_dict, original_sample_ids = self.__minibatch_to_feed_dict(batch_data,
+                                                                               language_to_reweighting_factor, is_train)
                 yield feed_dict, batch_data['samples_in_batch'], total_samples_used, original_sample_ids
                 batch_data = self.__init_minibatch()
 
         if not drop_incomplete_final_minibatch and batch_data['samples_in_batch'] > 0:
-            feed_dict, original_sample_ids = self.__minibatch_to_feed_dict(batch_data, language_to_reweighting_factor, is_train)
+            feed_dict, original_sample_ids = self.__minibatch_to_feed_dict(batch_data, language_to_reweighting_factor,
+                                                                           is_train)
             yield feed_dict, batch_data['samples_in_batch'], total_samples_used, original_sample_ids
 
-    def __run_epoch_in_batches(self, data: LoadedSamples, epoch_name: str, is_train: bool, quiet: bool = False) -> Tuple[float, float, float]:
+    def __run_epoch_in_batches(self, data: LoadedSamples, epoch_name: str, is_train: bool, quiet: bool = False) -> \
+    Tuple[float, float, float]:
         """
         Args:
             data: Data to run on; will be broken into minibatches.
@@ -725,7 +749,7 @@ class Model(ABC):
             ops_to_run = {'loss': self.__ops['loss'], 'mrr': self.__ops['mrr']}
             if is_train:
                 ops_to_run['train_step'] = self.__ops['train_step']
-            #print(ops_to_run)
+            # print(ops_to_run)
             op_results = self.__sess.run(ops_to_run, feed_dict=batch_data_dict)
             assert not np.isnan(op_results['loss'])
 
@@ -746,7 +770,7 @@ class Model(ABC):
         if printed_one_line:
             print("\r\x1b[K", end='')
         self.train_log("  Epoch %s took %.2fs [processed %s samples/second]"
-                       % (epoch_name, used_time, int(samples_used_so_far/used_time)))
+                       % (epoch_name, used_time, int(samples_used_so_far / used_time)))
 
         return loss, mrr, used_time
 
@@ -768,19 +792,23 @@ class Model(ABC):
         #     session = self.__sess.as_default()
         #
         # with session:
-        with tf.compat.v1.Session() as sess:
+        with tf.compat.v1.get_default_session() as session:
             tf.compat.v1.set_random_seed(self.hyperparameters['seed'])
             train_data_per_lang_nums = {language: len(samples) for language, samples in train_data.items()}
-            print('Training on %s samples.' % (", ".join("%i %s" % (num, lang) for (lang, num) in train_data_per_lang_nums.items())))
+            print('Training on %s samples.' % (
+                ", ".join("%i %s" % (num, lang) for (lang, num) in train_data_per_lang_nums.items())))
             valid_data_per_lang_nums = {language: len(samples) for language, samples in valid_data.items()}
-            print('Validating on %s samples.' % (", ".join("%i %s" % (num, lang) for (lang, num) in valid_data_per_lang_nums.items())))
+            print('Validating on %s samples.' % (
+                ", ".join("%i %s" % (num, lang) for (lang, num) in valid_data_per_lang_nums.items())))
 
             if resume:
                 # Variables should have been restored.
-                best_val_mrr_loss, best_val_mrr, _ = self.__run_epoch_in_batches(valid_data, "RESUME (valid)", is_train=False, quiet=quiet)
+                best_val_mrr_loss, best_val_mrr, _ = self.__run_epoch_in_batches(valid_data, "RESUME (valid)",
+                                                                                 is_train=False, quiet=quiet)
                 self.train_log('Validation Loss on Resume: %.6f' % (best_val_mrr_loss,))
             else:
-                init_op = tf.compat.v1.variables_initializer(self.__sess.graph.get_collection(tf.compat.v1.GraphKeys.GLOBAL_VARIABLES))
+                init_op = tf.compat.v1.variables_initializer(
+                    self.__sess.graph.get_collection(tf.compat.v1.GraphKeys.GLOBAL_VARIABLES))
                 self.__sess.run(init_op)
                 self.save(model_path)
                 best_val_mrr = 0
@@ -792,7 +820,8 @@ class Model(ABC):
                 self.train_log('==== Epoch %i ====' % (epoch_number,))
 
                 # run training loop and log metrics
-                train_loss, train_mrr, train_time = self.__run_epoch_in_batches(train_data, "%i (train)" % (epoch_number,),
+                train_loss, train_mrr, train_time = self.__run_epoch_in_batches(train_data,
+                                                                                "%i (train)" % (epoch_number,),
                                                                                 is_train=True,
                                                                                 quiet=quiet)
                 self.train_log(' Training Loss: %.6f' % (train_loss,))
@@ -810,14 +839,14 @@ class Model(ABC):
                        'val-loss': val_loss,
                        'val-mrr': val_mrr,
                        'val-time-sec': val_time}
-                
+
                 # log to wandb
                 wandb.log(log)
-            
+
                 # log to tensorboard
                 for key in log:
                     if key != 'epoch':
-                        self._log_tensorboard_scalar(tag=key, 
+                        self._log_tensorboard_scalar(tag=key,
                                                      value=log[key],
                                                      step=epoch_number)
 
@@ -871,7 +900,7 @@ class Model(ABC):
              A list of either a 1D numpy array of the representation of the i-th element in data or None if a
              representation could not be computed.
         """
-        
+
         tensorized_data = defaultdict(list)  # type: Dict[str, List[Dict[str, Any]]]
         sample_to_tensorised_data_id = []  # type: List[Optional[SampleId]]
         for raw_sample in raw_data:
@@ -895,20 +924,24 @@ class Model(ABC):
 
         computed_representations = []
         original_tensorised_data_ids = []  # type: List[SampleId]
-        for minibatch_counter, (batch_data_dict, samples_in_batch, samples_used_so_far, batch_original_tensorised_data_ids) in enumerate(data_generator):
+        for minibatch_counter, (
+        batch_data_dict, samples_in_batch, samples_used_so_far, batch_original_tensorised_data_ids) in enumerate(
+                data_generator):
             op_results = self.__sess.run(model_representation_op, feed_dict=batch_data_dict)
             computed_representations.append(op_results)
             original_tensorised_data_ids.extend(batch_original_tensorised_data_ids)
 
         computed_representations = np.concatenate(computed_representations, axis=0)
         tensorised_data_id_to_representation_idx = {tensorised_data_id: repr_idx
-                                                    for (repr_idx, tensorised_data_id) in enumerate(original_tensorised_data_ids)}
+                                                    for (repr_idx, tensorised_data_id) in
+                                                    enumerate(original_tensorised_data_ids)}
         reordered_representations: List = []
         for tensorised_data_id in sample_to_tensorised_data_id:
             if tensorised_data_id is None:
                 reordered_representations.append(None)
             else:
-                reordered_representations.append(computed_representations[tensorised_data_id_to_representation_idx[tensorised_data_id]])
+                reordered_representations.append(
+                    computed_representations[tensorised_data_id_to_representation_idx[tensorised_data_id]])
         return reordered_representations
 
     def get_query_representations(self, query_data: List[Dict[str, Any]]) -> List[Optional[np.ndarray]]:
@@ -947,9 +980,9 @@ class Model(ABC):
                     is_test=True)
             else:
                 return False
+
         print("get_code_representations")
         return self.__compute_representations_batched(code_data,
                                                       data_loader_fn=code_data_loader,
                                                       model_representation_op=self.__ops['code_representations'],
                                                       representation_type=RepresentationType.CODE)
-
