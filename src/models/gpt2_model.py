@@ -16,7 +16,7 @@ class GPT2Model(Model):
     @classmethod
     def get_default_hyperparameters(cls) -> Dict[str, Any]:
         # config = GPT2Config()
-        hypers = {'batch_size': 10}
+        hypers = {}
         for label in ["code", "query"]:
             hypers.update({f'{label}_{key}': value
                            for key, value in GPT2Encoder.get_default_hyperparameters().items()})

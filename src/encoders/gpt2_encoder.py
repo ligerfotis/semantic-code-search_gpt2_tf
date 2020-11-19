@@ -12,8 +12,14 @@ from utils.tfutils import pool_sequence_embedding
 class GPT2Encoder(MaskedSeqEncoder):
     @classmethod
     def get_default_hyperparameters(cls) -> Dict[str, Any]:
+        encoder_hypers = {'token_vocab_size': 50257,
+                          'token_vocab_count_threshold': 10,
+                          'token_embedding_size': 768,
+                          'use_subtokens': False,
+                          'mark_subtoken_end': False,
 
-        encoder_hypers = {'self_attention_pool_mode': 'weighted_mean',
+                          'max_num_tokens': 200,
+                          'self_attention_pool_mode': 'weighted_mean',
                           'self_attention_hidden_size': 768,
                           'batch_size': 1,
                           'use_bpe': True,
