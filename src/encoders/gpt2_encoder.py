@@ -14,9 +14,8 @@ class GPT2Encoder(MaskedSeqEncoder):
     def get_default_hyperparameters(cls) -> Dict[str, Any]:
 
         encoder_hypers = {'self_attention_pool_mode': 'weighted_mean',
-                          'use_subtokens': False,
-                          'mark_subtoken_end': False,
-
+                          'self_attention_hidden_size': 768,
+                          'batch_size': 1,
                           'use_bpe': True,
                           'pct_bpe': 0.5
                           }

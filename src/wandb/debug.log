@@ -11,4 +11,8 @@
 2020-11-18 23:08:54,030 INFO    MainThread:6479 [run_manager.py:wrap_existing_process():1110] informing user process we are ready to proceed
 2020-11-18 23:08:54,031 INFO    MainThread:6479 [run_manager.py:_sync_etc():1214] entering loop for messages from user process
 2020-11-18 23:08:54,103 INFO    Thread-8  :6479 [run_manager.py:_on_file_modified():673] file/dir modified: /mnt/34C28480C28447D6/PycharmProjects/CSE_6324/semantic-code-search_gpt2_tf/src/wandb/dryrun-20201118_210851-3ircg36o/config.yaml
-2020-11-18 23:08:54,103 INFO    Thread-8  :6479 [3ircg36o:run_manager.py:_on_file_modified():673] file/dir modified: /mnt/34C28480C28447D6/PycharmProjects/CSE_6324/semantic-code-search_gpt2_tf/src/wandb/dryrun-20201118_210851-3ircg36o/config.yaml
+2020-11-18 23:31:07,357 INFO    MainThread:6479 [run_manager.py:_sync_etc():1270] process received interrupt signal, shutting down
+2020-11-18 23:31:07,370 INFO    MainThread:6479 [run_manager.py:_sync_etc():1323] closing log streams and sending exitcode to W&B
+2020-11-18 23:31:07,371 INFO    MainThread:6479 [run_manager.py:shutdown():1020] shutting down system stats and metadata service
+0-11-18 23:31:07,370 INFO    MainThread:6479 [3ircg36o:run_manager.py:_sync_etc():1323] closing log streams and sending exitcode to W&B
+2020-11-18 23:31:07,371 INFO    MainThread:6479 [3ircg36o:run_manager.py:shutdown():1020] shutting down system stats and metadata service

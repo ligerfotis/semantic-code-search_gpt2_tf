@@ -24,7 +24,7 @@ class GPT2Model(Model):
             'learning_rate': 5e-4,
             'code_use_subtokens': False,
             'code_mark_subtoken_end': False,
-            'batch_size': 10,
+            'batch_size': 5,
         }
         hypers.update(super().get_default_hyperparameters())
         hypers.update(model_hypers)
