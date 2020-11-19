@@ -253,12 +253,12 @@ class Model(ABC):
         # with tf.compat.v1.variable_scope("code_encoder"):
         language_encoders = []
         for (language, language_metadata) in sorted(self.__per_code_language_metadata.items(), key=lambda kv: kv[0]):
-            # with tf.compat.v1.variable_scope(language):
-            self.__code_encoders[language] = self.__code_encoder_type(label="code",
-                                                                      hyperparameters=self.hyperparameters,
-                                                                      metadata=language_metadata)
-            language_encoders.append(self.__code_encoders[language].make_model(is_train=is_train,
-                                                                               name="code_"+language))
+            with tf.compat.v1.variable_scope(language):
+                self.__code_encoders[language] = self.__code_encoder_type(label="code",
+                                                                          hyperparameters=self.hyperparameters,
+                                                                          metadata=language_metadata)
+                language_encoders.append(self.__code_encoders[language].make_model(is_train=is_train,
+                                                                                   name=language))
 
         #print(language_encoders)
         self.ops['code_representations'] = tf.concat(language_encoders, axis=0)
@@ -762,13 +762,13 @@ class Model(ABC):
               quiet: bool = False,
               resume: bool = False) -> RichPath:
         model_path = RichPath.create(self.model_save_path, azure_info_path)
-        if 'gpt2' in self.model_save_path:
-            session = self.sess
-        else:
-            session = self.__sess.as_default()
-
-        with session:
-        # with tf.compat.v1.Session() as sess:
+        # if 'gpt2' in self.model_save_path:
+        #     session = self.sess
+        # else:
+        #     session = self.__sess.as_default()
+        #
+        # with session:
+        with tf.compat.v1.Session() as sess:
             tf.compat.v1.set_random_seed(self.hyperparameters['seed'])
             train_data_per_lang_nums = {language: len(samples) for language, samples in train_data.items()}
             print('Training on %s samples.' % (", ".join("%i %s" % (num, lang) for (lang, num) in train_data_per_lang_nums.items())))
