@@ -254,12 +254,11 @@ class Model(ABC):
         with tf.device('/gpu:0'):
             language_encoders = []
             for (language, language_metadata) in sorted(self.__per_code_language_metadata.items(), key=lambda kv: kv[0]):
-                with tf.compat.v1.variable_scope(language):
-                    self.__code_encoders[language] = self.__code_encoder_type(label="code",
-                                                                              hyperparameters=self.hyperparameters,
-                                                                              metadata=language_metadata)
-                    language_encoders.append(self.__code_encoders[language].make_model(is_train=is_train,
-                                                                                       name=language))
+                # with tf.compat.v1.variable_scope(language):
+                self.__code_encoders[language] = self.__code_encoder_type(label="code",
+                                                                          hyperparameters=self.hyperparameters,
+                                                                          metadata=language_metadata)
+                language_encoders.append(self.__code_encoders[language].make_model(is_train=is_train))
 
             #print(language_encoders)
             self.ops['code_representations'] = tf.concat(language_encoders, axis=0)
@@ -268,7 +267,7 @@ class Model(ABC):
             self.__query_encoder = self.__query_encoder_type(label="query",
                                                              hyperparameters=self.hyperparameters,
                                                              metadata=self.__query_metadata)
-            self.ops['query_representations'] = self.__query_encoder.make_model(is_train=is_train, name="query")
+            self.ops['query_representations'] = self.__query_encoder.make_model(is_train=is_train)
 
             code_representation_size = next(iter(self.__code_encoders.values())).output_representation_size
         query_representation_size = self.__query_encoder.output_representation_size

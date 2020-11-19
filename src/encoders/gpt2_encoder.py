@@ -36,7 +36,7 @@ class GPT2Encoder(MaskedSeqEncoder):
     def output_representation_size(self):
         return self.get_hyper('self_attention_hidden_size')
 
-    def make_model(self, is_train: bool = False, name="default"):
+    def make_model(self, is_train: bool = False):
         # with tf.compat.v1.variable_scope("gpt2_encoder_" + name):
         self._make_placeholders()
         """
