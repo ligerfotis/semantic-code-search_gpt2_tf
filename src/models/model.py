@@ -253,12 +253,13 @@ class Model(ABC):
         # with tf.compat.v1.variable_scope("code_encoder"):
         language_encoders = []
         for (language, language_metadata) in sorted(self.__per_code_language_metadata.items(), key=lambda kv: kv[0]):
-            # with tf.compat.v1.variable_scope(language):
-            self.__code_encoders[language] = self.__code_encoder_type(label="code",
-                                                                      hyperparameters=self.hyperparameters,
-                                                                      metadata=language_metadata)
-            language_encoders.append(self.__code_encoders[language].make_model(is_train=is_train,
-                                                                               name="code_"+language))
+            with tf.compat.v1.variable_scope(language):
+                self.__code_encoders[language] = self.__code_encoder_type(label="code",
+                                                                          hyperparameters=self.hyperparameters,
+                                                                          metadata=language_metadata)
+                language_encoders.append(self.__code_encoders[language].make_model(is_train=is_train,
+                                                                                   name="code_"+language))
+
         #print(language_encoders)
         self.ops['code_representations'] = tf.concat(language_encoders, axis=0)
         # with tf.compat.v1.variable_scope("query_encoder"):

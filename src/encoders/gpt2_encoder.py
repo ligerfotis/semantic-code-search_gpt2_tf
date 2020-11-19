@@ -40,19 +40,10 @@ class GPT2Encoder(MaskedSeqEncoder):
         Therefore the BertModel will be used and adjust the hyper-parameters to be the same of those of the
         pretrained GPT-2 models.
         """
-        # print(self.placeholders['tokens'])
-        # print(self.placeholders['tokens_mask'])
         cache_dir = "../resources/hugging_face/gpt2/"
         model = TFGPT2Model.from_pretrained('gpt2', cache_dir=cache_dir, return_dict=True)
-        # tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-        # model = TFGPT2Model.from_pretrained('gpt2', return_dict=True)
-        # model = tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
-        # model = TFGPT2Model.from_pretrained('gpt2', return_dict=True)
-        # outputs = model(input_ids=self.placeholders['tokens'],
-        #                 attention_mask=self.placeholders['tokens_mask'])
-        output = model(self.placeholders['tokens'], training=True)
 
-        # tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+        output = model(self.placeholders['tokens'], training=is_train)
 
         seq_token_embeddings = output.last_hidden_state
 
@@ -62,41 +53,3 @@ class GPT2Encoder(MaskedSeqEncoder):
                                        sequence_token_embeddings=seq_token_embeddings,
                                        sequence_lengths=seq_token_lengths,
                                        sequence_token_masks=seq_token_masks)
-
-    # def loss(self):
-    #     loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-    #     per_sample_loss = per_sample_loss * self.placeholders['sample_loss_weights']
-    #     tf.reduce_sum(input_tensor=per_sample_loss) / tf.reduce_sum(
-    #         input_tensor=self.placeholders['sample_loss_weights'])
-    #     return loss
-    #
-    # def train(self, train_dataset):
-    #     model = self.make_model(is_train=True)
-    #     loss = self.loss()
-    #
-    #     model.compile(loss=loss)
-    #     model.fit(train_dataset, epochs=2, steps_per_epoch=115)
-    #     model.save_pretrained('/gpt2_csnet/')
-
-    # def train(self, model, train_dataset, test_dataset, data_collator):
-    #     training_args = TrainingArguments(
-    #         output_dir="./gpt2-csnet",  # The output directory
-    #         overwrite_output_dir=True,  # overwrite the content of the output directory
-    #         num_train_epochs=3,  # number of training epochs
-    #         per_device_train_batch_size=32,  # batch size for training
-    #         per_device_eval_batch_size=64,  # batch size for evaluation
-    #         eval_steps=400,  # Number of update steps between two evaluations.
-    #         save_steps=800,  # after # steps model is saved
-    #         warmup_steps=500,  # number of warmup steps for learning rate scheduler
-    #     )
-    #     trainer = Trainer(
-    #         model=model,
-    #         args=training_args,
-    #         data_collator=data_collator,
-    #         train_dataset=train_dataset,
-    #         eval_dataset=test_dataset,
-    #         prediction_loss_only=True,
-    #     )
-    #     trainer.train()
-    #     trainer.save_model()
-
