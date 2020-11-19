@@ -792,7 +792,9 @@ class Model(ABC):
         #     session = self.__sess.as_default()
         #
         # with session:
-        with tf.compat.v1.get_default_session() as session:
+        sess = tf.compat.v1.Session()
+
+        with sess.as_default():
             tf.compat.v1.set_random_seed(self.hyperparameters['seed'])
             train_data_per_lang_nums = {language: len(samples) for language, samples in train_data.items()}
             print('Training on %s samples.' % (
