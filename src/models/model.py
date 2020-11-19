@@ -251,7 +251,7 @@ class Model(ABC):
                                         name='sample_loss_weights')
 
         # with tf.compat.v1.variable_scope("code_encoder"):
-        with tf.device('/cpu:0'):
+        with tf.device('/gpu:0'):
             language_encoders = []
             for (language, language_metadata) in sorted(self.__per_code_language_metadata.items(), key=lambda kv: kv[0]):
                 with tf.compat.v1.variable_scope(language):
@@ -263,7 +263,7 @@ class Model(ABC):
 
             #print(language_encoders)
             self.ops['code_representations'] = tf.concat(language_encoders, axis=0)
-        with tf.device('/cpu:1'):
+        with tf.device('/gpu:1'):
             # with tf.compat.v1.variable_scope("query_encoder"):
             self.__query_encoder = self.__query_encoder_type(label="query",
                                                              hyperparameters=self.hyperparameters,
