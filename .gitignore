@@ -1,4 +1,8 @@
-/resources
+/resources/data
+/resources/saved_models
+/resources/hugging_face
+/resources/models
+/resources/baseline
 /src/wandb/
 /env/
 preprocessing.sif
