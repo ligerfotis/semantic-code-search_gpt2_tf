@@ -21,7 +21,7 @@ class GPT2Encoder(MaskedSeqEncoder):
                           'max_num_tokens': 200,
                           'self_attention_pool_mode': 'weighted_mean',
                           'self_attention_hidden_size': 768,
-                          'batch_size': 1,
+                          'batch_size': 2,
                           'use_bpe': True,
                           'pct_bpe': 0.5
                           }
