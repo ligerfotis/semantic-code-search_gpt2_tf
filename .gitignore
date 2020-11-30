@@ -12,5 +12,6 @@ script/.config/
 cript/.keras/
 cript/.local/
 cript/.netrc
-
-
+script/preprocessing.sif
+script/csnet_gpu.sif
+script/gpt2*
