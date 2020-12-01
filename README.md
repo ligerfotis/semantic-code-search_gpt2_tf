@@ -32,3 +32,7 @@
 6. Alternatively one can sent the training as a job on TACC after step 3.
 
         sbatch  run_experiments_gtp2_p100.sh 
+
+Docker images:
+* preprocessing: ligerfotis/preprocessing:latest
+* main image with gpu support:  ligerfotis/csnet:gpu
